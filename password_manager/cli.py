@@ -30,6 +30,43 @@ def get_option() -> str:
         bullet="> "
     )
     choice = cli_prompt.launch()
-    return choice      
+    return choice   
+
+def get_new_password_information() -> dict:
+    cli = SlidePrompt(
+        [
+            Input("Enter the name of this record: "),
+            Input("Enter the email (optional): "),
+            Input("Enter the username (optional): "),
+            Password("Enter the password: "),
+            Input("Enter the URL (optional): "),
+            Input("Enter any notes (optional): ")
+        ]
+    )
+    result = cli.launch()
+    return {
+        "name": result[0][1],
+        "email": result[1][1],
+        "username": result[2][1],
+        "password": result[3][1],
+        "url": result[4][1],
+        "notes": result[5][1]
+    }
+def retrieve_partial_password_name() -> str:
+    cli = Input("Enter the name of the password record you want to retrieve: ")
+    return cli.launch()
+def retrieve_password_name(matches: list) -> str:
+    if not matches:
+        print("No matches found.")
+        return None
     
-    
+    cli_prompt = Bullet(
+        prompt="Select the password record you want to retrieve:",
+        choices=[row[0] for row in matches],
+        bullet="> "
+    )
+    selected = cli_prompt.launch()
+    if not selected:
+        print("No record selected.")
+        return None
+    return selected
